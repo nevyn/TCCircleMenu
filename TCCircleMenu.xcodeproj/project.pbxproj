@@ -7,25 +7,42 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0538310A14CC956F00B0BE4A /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0538310914CC956F00B0BE4A /* QuartzCore.framework */; };
 		05C41F0214CC621D0072C1E8 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05C41F0114CC621D0072C1E8 /* UIKit.framework */; };
 		05C41F0414CC621D0072C1E8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05C41F0314CC621D0072C1E8 /* Foundation.framework */; };
 		05C41F0614CC621D0072C1E8 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05C41F0514CC621D0072C1E8 /* CoreGraphics.framework */; };
 		05C41F0C14CC621D0072C1E8 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 05C41F0A14CC621D0072C1E8 /* InfoPlist.strings */; };
 		05C41F0E14CC621D0072C1E8 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 05C41F0D14CC621D0072C1E8 /* main.m */; };
 		05C41F1214CC621D0072C1E8 /* TCAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 05C41F1114CC621D0072C1E8 /* TCAppDelegate.m */; };
+		05C41F1A14CC623A0072C1E8 /* TCCircleMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 05C41F1914CC623A0072C1E8 /* TCCircleMenu.m */; };
+		05C41F2A14CC6AFA0072C1E8 /* SPDepends.m in Sources */ = {isa = PBXBuildFile; fileRef = 05C41F2014CC6AFA0072C1E8 /* SPDepends.m */; };
+		05C41F2B14CC6AFA0072C1E8 /* SPFunctional.m in Sources */ = {isa = PBXBuildFile; fileRef = 05C41F2214CC6AFA0072C1E8 /* SPFunctional.m */; };
+		05C41F2C14CC6AFA0072C1E8 /* SPKVONotificationCenter.m in Sources */ = {isa = PBXBuildFile; fileRef = 05C41F2414CC6AFA0072C1E8 /* SPKVONotificationCenter.m */; };
+		05C41F2D14CC6AFA0072C1E8 /* SPLowVerbosity.m in Sources */ = {isa = PBXBuildFile; fileRef = 05C41F2614CC6AFA0072C1E8 /* SPLowVerbosity.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0538310914CC956F00B0BE4A /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		05C41EFD14CC621D0072C1E8 /* TCCircleMenu.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TCCircleMenu.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		05C41F0114CC621D0072C1E8 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		05C41F0314CC621D0072C1E8 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		05C41F0514CC621D0072C1E8 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
-		05C41F0914CC621D0072C1E8 /* TCCircleMenu-Info.plist */ = {isa = PBXFileReference; path = "TCCircleMenu-Info.plist"; sourceTree = "<group>"; };
+		05C41F0914CC621D0072C1E8 /* TCCircleMenu-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "TCCircleMenu-Info.plist"; sourceTree = "<group>"; };
 		05C41F0B14CC621D0072C1E8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		05C41F0D14CC621D0072C1E8 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		05C41F0F14CC621D0072C1E8 /* TCCircleMenu-Prefix.pch */ = {isa = PBXFileReference; path = "TCCircleMenu-Prefix.pch"; sourceTree = "<group>"; };
-		05C41F1014CC621D0072C1E8 /* TCAppDelegate.h */ = {isa = PBXFileReference; path = TCAppDelegate.h; sourceTree = "<group>"; };
+		05C41F0F14CC621D0072C1E8 /* TCCircleMenu-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TCCircleMenu-Prefix.pch"; sourceTree = "<group>"; };
+		05C41F1014CC621D0072C1E8 /* TCAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TCAppDelegate.h; sourceTree = "<group>"; };
 		05C41F1114CC621D0072C1E8 /* TCAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TCAppDelegate.m; sourceTree = "<group>"; };
+		05C41F1814CC623A0072C1E8 /* TCCircleMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCCircleMenu.h; sourceTree = "<group>"; };
+		05C41F1914CC623A0072C1E8 /* TCCircleMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCCircleMenu.m; sourceTree = "<group>"; };
+		05C41F1F14CC6AFA0072C1E8 /* SPDepends.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SPDepends.h; sourceTree = "<group>"; };
+		05C41F2014CC6AFA0072C1E8 /* SPDepends.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SPDepends.m; sourceTree = "<group>"; };
+		05C41F2114CC6AFA0072C1E8 /* SPFunctional.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SPFunctional.h; sourceTree = "<group>"; };
+		05C41F2214CC6AFA0072C1E8 /* SPFunctional.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SPFunctional.m; sourceTree = "<group>"; };
+		05C41F2314CC6AFA0072C1E8 /* SPKVONotificationCenter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SPKVONotificationCenter.h; sourceTree = "<group>"; };
+		05C41F2414CC6AFA0072C1E8 /* SPKVONotificationCenter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SPKVONotificationCenter.m; sourceTree = "<group>"; };
+		05C41F2514CC6AFA0072C1E8 /* SPLowVerbosity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SPLowVerbosity.h; sourceTree = "<group>"; };
+		05C41F2614CC6AFA0072C1E8 /* SPLowVerbosity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SPLowVerbosity.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -33,6 +50,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0538310A14CC956F00B0BE4A /* QuartzCore.framework in Frameworks */,
 				05C41F0214CC621D0072C1E8 /* UIKit.framework in Frameworks */,
 				05C41F0414CC621D0072C1E8 /* Foundation.framework in Frameworks */,
 				05C41F0614CC621D0072C1E8 /* CoreGraphics.framework in Frameworks */,
@@ -45,6 +63,8 @@
 		05C41EF214CC621D0072C1E8 = {
 			isa = PBXGroup;
 			children = (
+				05C41F1814CC623A0072C1E8 /* TCCircleMenu.h */,
+				05C41F1914CC623A0072C1E8 /* TCCircleMenu.m */,
 				05C41F0714CC621D0072C1E8 /* TCCircleMenu */,
 				05C41F0014CC621D0072C1E8 /* Frameworks */,
 				05C41EFE14CC621D0072C1E8 /* Products */,
@@ -62,6 +82,8 @@
 		05C41F0014CC621D0072C1E8 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				05C41F1D14CC6AFA0072C1E8 /* SPSuccinct */,
+				0538310914CC956F00B0BE4A /* QuartzCore.framework */,
 				05C41F0114CC621D0072C1E8 /* UIKit.framework */,
 				05C41F0314CC621D0072C1E8 /* Foundation.framework */,
 				05C41F0514CC621D0072C1E8 /* CoreGraphics.framework */,
@@ -88,6 +110,22 @@
 				05C41F0F14CC621D0072C1E8 /* TCCircleMenu-Prefix.pch */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		05C41F1D14CC6AFA0072C1E8 /* SPSuccinct */ = {
+			isa = PBXGroup;
+			children = (
+				05C41F1F14CC6AFA0072C1E8 /* SPDepends.h */,
+				05C41F2014CC6AFA0072C1E8 /* SPDepends.m */,
+				05C41F2114CC6AFA0072C1E8 /* SPFunctional.h */,
+				05C41F2214CC6AFA0072C1E8 /* SPFunctional.m */,
+				05C41F2314CC6AFA0072C1E8 /* SPKVONotificationCenter.h */,
+				05C41F2414CC6AFA0072C1E8 /* SPKVONotificationCenter.m */,
+				05C41F2514CC6AFA0072C1E8 /* SPLowVerbosity.h */,
+				05C41F2614CC6AFA0072C1E8 /* SPLowVerbosity.m */,
+			);
+			name = SPSuccinct;
+			path = Vendor/SPSuccinct/SPSuccinct;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -154,6 +192,11 @@
 			files = (
 				05C41F0E14CC621D0072C1E8 /* main.m in Sources */,
 				05C41F1214CC621D0072C1E8 /* TCAppDelegate.m in Sources */,
+				05C41F1A14CC623A0072C1E8 /* TCCircleMenu.m in Sources */,
+				05C41F2A14CC6AFA0072C1E8 /* SPDepends.m in Sources */,
+				05C41F2B14CC6AFA0072C1E8 /* SPFunctional.m in Sources */,
+				05C41F2C14CC6AFA0072C1E8 /* SPKVONotificationCenter.m in Sources */,
+				05C41F2D14CC6AFA0072C1E8 /* SPLowVerbosity.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -257,6 +300,7 @@
 				05C41F1714CC621D0072C1E8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

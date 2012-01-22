@@ -1,0 +1,3 @@
+[submodule "Vendor/SPSuccinct"]
+	path = Vendor/SPSuccinct
+	url = git://github.com/nevyn/SPSuccinct.git
