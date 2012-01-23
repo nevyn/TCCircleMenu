@@ -14,11 +14,14 @@
 {
     self.window = [[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease];
     // Override point for customization after application launch.
-    self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
+	
+	UIView *rootView = [[[UIView alloc] initWithFrame:self.window.bounds] autorelease];
+    rootView.backgroundColor = [UIColor whiteColor];
+	[self.window addSubview:rootView];
     
     UITapGestureRecognizer *grec = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(grec:)];
-    [self.window addGestureRecognizer:grec];
+    [rootView addGestureRecognizer:grec];
     
     return YES;
 }
@@ -56,7 +59,7 @@
             }],
         nil]];
         
-        [menu presentAt:p inView:self.window];
+        [menu presentAt:p inView:grec.view];
     }
 }
 

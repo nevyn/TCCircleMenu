@@ -2,10 +2,13 @@
 #import "SPKVONotificationCenter.h"
 #import "SPLowVerbosity.h"
 #import "SPFunctional.h"
+#import "SPDepends.h"
 #import <QuartzCore/QuartzCore.h>
 
 @interface TCCircleMenu ()
 @property(nonatomic,assign) TCCircleMenu *parent; // root menu if nil
+@property(nonatomic,retain) UIView *touchInterceptorView;
+@property(nonatomic,retain) UITapGestureRecognizer *touchInterceptorGrec;
 -(CGFloat)innerCircumference;
 -(CGFloat)innerRadius;
 -(CGFloat)outerRadius;
@@ -17,6 +20,7 @@
 @property(nonatomic) CGSize bodySize;
 @property(nonatomic,retain) UIFont *font;
 @property(nonatomic) CGFloat startAngle, endAngle;
+@property(nonatomic,readonly) UIBezierPath *pathBounds;
 @end
 
 @implementation TCCircleMenu {
@@ -25,6 +29,8 @@
 @synthesize subMenu = _subMenu;
 @synthesize parent = _parent;
 @synthesize itemsObs = _itemsObs;
+@synthesize touchInterceptorView = _touchInterceptorView;
+@synthesize touchInterceptorGrec = _touchInterceptorGrec;
 @dynamic menuItems;
 - (id)init; { return [self initWithFrame:CGRectZero]; }
 - (id)initWithFrame:(CGRect)frame;
@@ -40,7 +46,11 @@
     
     __typeof(self) selff = self;
     self.itemsObs = [self sp_addObserver:self forKeyPath:@"menuItems" options:NSKeyValueObservingOptionNew callback:^(NSDictionary *how, id object, NSString *keyPath) {
-            
+		for(TCCircleMenuItem *removed in [how objectForKey:NSKeyValueChangeOldKey])
+			[removed removeFromSuperview];
+		for(TCCircleMenuItem *added in [how objectForKey:NSKeyValueChangeNewKey])
+			[selff addSubview:added]; 
+		
         CGPoint p = selff.layer.position;
         //CGFloat ri = [selff innerRadius];
         CGFloat ro = [selff outerRadius];
@@ -48,19 +58,15 @@
         selff.frame = CGRectMake(0, 0, ro*2 + 2, ro*2 + 2);
         selff.layer.position = p;
 
-        CGFloat c = [selff->_menuItems count];        
         #define angleWidthForSegment(x) (([x bodySize].width/ic)*M_PI*2)
-        CGFloat anglePen = -M_PI/2 - angleWidthForSegment([selff->_menuItems objectAtIndex:0])/2;
-        
+        CGFloat anglePen = -M_PI/2 - angleWidthForSegment([selff->_menuItems objectAtIndex:0])/2;        
 
         for(TCCircleMenuItem *item in selff->_menuItems) {
-            item.frame = CGRectMake(0, 0, item.bodySize.width, ro);
+            item.frame = selff.bounds;
             
             item.startAngle = anglePen;
             anglePen += angleWidthForSegment(item);
             item.endAngle = anglePen;
-                                    
-            item.backgroundColor = [UIColor colorWithHue:[selff->_menuItems indexOfObject:item]/c saturation:1 brightness:1 alpha:.5];
         }
         
         [selff setNeedsDisplay];
@@ -72,6 +78,8 @@
 {
     [_menuItems release]; _menuItems = nil;
     [_itemsObs invalidate]; self.itemsObs = nil;
+	[_touchInterceptorView removeFromSuperview]; self.touchInterceptorView = nil;
+	self.touchInterceptorGrec = nil;
     [super dealloc];
 }
 
@@ -81,29 +89,14 @@
     [[UIColor clearColor] set];
     UIRectFill(rect);
     
-    
-    CGPoint mid = CGPointMake(self.frame.size.width/2, self.frame.size.height/2);
-    
     for(TCCircleMenuItem *item in _menuItems) {
-        UIBezierPath *outer = [UIBezierPath bezierPathWithArcCenter:mid radius:[self outerRadius] startAngle:item.startAngle endAngle:item.endAngle clockwise:YES];
-        UIBezierPath *inner = [UIBezierPath bezierPathWithArcCenter:mid radius:[self innerRadius] startAngle:item.endAngle endAngle:item.startAngle clockwise:NO];
-        
-        [[UIColor greenColor] set];
-        [outer stroke];
-        [[UIColor blueColor] set];
-        [inner stroke];
-        
-        UIBezierPath *semicircle = [UIBezierPath bezierPath];
-        [semicircle appendPath:outer];
-        [semicircle addLineToPoint:CGPointMake(mid.x + cos(item.endAngle)*self.innerRadius, mid.y + sin(item.endAngle)*self.innerRadius)];
-        [semicircle appendPath:inner];
-        [semicircle addLineToPoint:CGPointMake(mid.x + cos(item.startAngle)*self.outerRadius, mid.y + sin(item.startAngle)*self.outerRadius)];
-        [item.backgroundColor set];
-        [semicircle fill];
+		[[UIColor colorWithHue:[_menuItems indexOfObject:item]/(float)_menuItems.count saturation:1 brightness:1 alpha:.5] set];
+        [item.pathBounds fill];
         
     }
-    
 }
+
+#pragma mark Touch
 
 
 #pragma mark Circle math
@@ -140,10 +133,31 @@
         self.alpha = 1;
         self.transform = CGAffineTransformIdentity;
     } completion:nil];
+	
+	if(!_parent) {
+		UIWindow *window = view.window;
+		self.touchInterceptorView = [[[UIView alloc] initWithFrame:window.bounds] autorelease];
+		[window insertSubview:_touchInterceptorView belowSubview:self];
+		self.touchInterceptorGrec = [[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(backgroundTap:)] autorelease];
+		[_touchInterceptorView addGestureRecognizer:_touchInterceptorGrec];
+	}
+}
+-(void)backgroundTap:(UITapGestureRecognizer*)grec;
+{
+	if(grec.state == UIGestureRecognizerStateRecognized)
+		[self dismiss];
 }
 -(void)dismiss;
 {
-
+	[UIView animateWithDuration:.3 delay:0 options:UIViewAnimationCurveEaseIn animations:^{
+		self.alpha = 0;
+		self.transform = CGAffineTransformScale(CGAffineTransformMakeRotation(M_PI/4), 1.4, 1.4);
+	} completion:^(BOOL finished) {
+		[self removeFromSuperview];
+	}];
+	
+	[_touchInterceptorView removeFromSuperview]; self.touchInterceptorView = nil;
+	self.touchInterceptorGrec = nil;
 }
 
 
@@ -196,6 +210,7 @@
 @synthesize font = _font;
 @synthesize bodySize = _bodySize;
 @synthesize startAngle = _startAngle, endAngle = _endAngle;
+@synthesize pathBounds = _pathBounds;
 + (TCCircleMenuItem*)itemNamed:(NSString*)name whenTapped:(void(^)(TCCircleMenuItem *sender))block;
 {
     return [[[TCCircleMenuItem alloc] initNamed:name whenTapped:block] autorelease];
@@ -206,6 +221,11 @@
     self.font = [UIFont boldSystemFontOfSize:14];
     self.title = name;
     self.action = block;
+	
+	$depends(@"angles", self, @"startAngle", @"endAngle", (id)^{
+		[selff->_pathBounds release]; selff->_pathBounds = nil;
+	}, nil);
+	
     return self;
 }
 - (void)dealloc;
@@ -213,7 +233,29 @@
     self.title = nil;
     self.action = nil;
     self.font = nil;
+	[_pathBounds release];
     [super dealloc];
+}
+
+-(UIBezierPath*)pathBounds;
+{
+	if(_pathBounds) return _pathBounds;
+	
+	TCCircleMenu *menu = $cast(TCCircleMenu, [self superview]);
+	
+    CGPoint mid = CGPointMake(menu.frame.size.width/2, menu.frame.size.height/2);
+	
+	UIBezierPath *outer = [UIBezierPath bezierPathWithArcCenter:mid radius:[menu outerRadius] startAngle:self.startAngle endAngle:self.endAngle clockwise:YES];
+	UIBezierPath *inner = [UIBezierPath bezierPathWithArcCenter:mid radius:[menu innerRadius] startAngle:self.endAngle endAngle:self.startAngle clockwise:NO];
+	
+	UIBezierPath *semicircle = [UIBezierPath bezierPath];
+	[semicircle appendPath:outer];
+	[semicircle addLineToPoint:CGPointMake(mid.x + cos(self.endAngle)*menu.innerRadius, mid.y + sin(self.endAngle)*menu.innerRadius)];
+	[semicircle appendPath:inner];
+	[semicircle addLineToPoint:CGPointMake(mid.x + cos(self.startAngle)*menu.outerRadius, mid.y + sin(self.startAngle)*menu.outerRadius)];
+	
+	_pathBounds = [semicircle retain];
+	return _pathBounds;
 }
 -(void)setTitle:(NSString *)title;
 {
@@ -224,15 +266,9 @@
     sz.width += 10*2;
     sz.height += 15*2;
     self.bodySize = sz;
-    
-    [[self subviews] valueForKey:@"removeFromSuperview"];
-    UILabel *l = [[[UILabel alloc] initWithFrame:CGRectZero] autorelease];
-    l.opaque = NO; l.backgroundColor = [UIColor clearColor];
-    l.text = title;
-    l.textAlignment = UITextAlignmentCenter;
-    l.font = _font;
-    l.frame = (CGRect){.size = sz};
-    l.textColor = [UIColor blackColor];
-    [self addSubview:l];
+}
+- (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event;
+{
+	return [self.pathBounds containsPoint:point];
 }
 @end
