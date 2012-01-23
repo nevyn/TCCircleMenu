@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		0538310A14CC956F00B0BE4A /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0538310914CC956F00B0BE4A /* QuartzCore.framework */; };
+		0538319A14CE0BE000B0BE4A /* ZCCurvedText.m in Sources */ = {isa = PBXBuildFile; fileRef = 0538319914CE0BE000B0BE4A /* ZCCurvedText.m */; };
 		05C41F0214CC621D0072C1E8 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05C41F0114CC621D0072C1E8 /* UIKit.framework */; };
 		05C41F0414CC621D0072C1E8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05C41F0314CC621D0072C1E8 /* Foundation.framework */; };
 		05C41F0614CC621D0072C1E8 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05C41F0514CC621D0072C1E8 /* CoreGraphics.framework */; };
@@ -23,6 +24,8 @@
 
 /* Begin PBXFileReference section */
 		0538310914CC956F00B0BE4A /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		0538319814CE0BE000B0BE4A /* ZCCurvedText.h */ = {isa = PBXFileReference; fileEncoding = 4; path = ZCCurvedText.h; sourceTree = "<group>"; };
+		0538319914CE0BE000B0BE4A /* ZCCurvedText.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCCurvedText.m; sourceTree = "<group>"; };
 		05C41EFD14CC621D0072C1E8 /* TCCircleMenu.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TCCircleMenu.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		05C41F0114CC621D0072C1E8 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		05C41F0314CC621D0072C1E8 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -60,6 +63,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0538319714CE0BE000B0BE4A /* ZCCurvedText */ = {
+			isa = PBXGroup;
+			children = (
+				0538319814CE0BE000B0BE4A /* ZCCurvedText.h */,
+				0538319914CE0BE000B0BE4A /* ZCCurvedText.m */,
+			);
+			name = ZCCurvedText;
+			path = Vendor/ZCCurvedText;
+			sourceTree = "<group>";
+		};
 		05C41EF214CC621D0072C1E8 = {
 			isa = PBXGroup;
 			children = (
@@ -83,6 +96,7 @@
 			isa = PBXGroup;
 			children = (
 				05C41F1D14CC6AFA0072C1E8 /* SPSuccinct */,
+				0538319714CE0BE000B0BE4A /* ZCCurvedText */,
 				0538310914CC956F00B0BE4A /* QuartzCore.framework */,
 				05C41F0114CC621D0072C1E8 /* UIKit.framework */,
 				05C41F0314CC621D0072C1E8 /* Foundation.framework */,
@@ -198,6 +212,7 @@
 				05C41F2B14CC6AFA0072C1E8 /* SPFunctional.m in Sources */,
 				05C41F2C14CC6AFA0072C1E8 /* SPKVONotificationCenter.m in Sources */,
 				05C41F2D14CC6AFA0072C1E8 /* SPLowVerbosity.m in Sources */,
+				0538319A14CE0BE000B0BE4A /* ZCCurvedText.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

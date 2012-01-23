@@ -4,6 +4,7 @@
 #import "SPFunctional.h"
 #import "SPDepends.h"
 #import <QuartzCore/QuartzCore.h>
+#import "ZCCurvedText.h"
 
 @interface TCCircleMenu () <UIGestureRecognizerDelegate>
 @property(nonatomic,assign) TCCircleMenu *parent; // root menu if nil
@@ -79,11 +80,31 @@
 {
     [[UIColor clearColor] set];
     UIRectFill(rect);
+    CGContextRef ctx = UIGraphicsGetCurrentContext();
+    
+    CGFloat midRadius = (self.innerRadius + self.outerRadius)/2.;
+    CGPoint mid = CGPointMake(self.frame.size.width/2., self.frame.size.height/2.);
     
     for(TCCircleMenuItem *item in _menuItems) {
 		[[UIColor colorWithHue:[_menuItems indexOfObject:item]/(float)_menuItems.count saturation:.6 brightness:1 alpha:.8] set];
         [item.pathBounds fill];
         
+        CGFloat midAngle = (item.startAngle + item.endAngle)/2.;
+        
+        [[UIColor blackColor] set];
+        
+        CGContextSaveGState(ctx);
+        CGContextTranslateCTM(ctx, mid.x, mid.y);
+        CGContextRotateCTM(ctx, midAngle);
+        if(midAngle > 0 && midAngle < M_PI) // Turn upside-down
+            CGContextSetTextMatrix(ctx, CGAffineTransformMake(1.0, 0.0, 0.0, -1.0, 0.0, 0.0));
+        else {
+            //CGContextSetTextMatrix(ctx, CGAffineTransformMake(1.0, 0.0, 0.0, -1.0, 0.0, 0.0));
+            CGContextScaleCTM(ctx, 1, -1);
+            //CGContextSetTextMatrix(ctx, CGAffineTransformScale(CGAffineTransformIdentity, -1, -1));
+        }
+        [ZCCurvedText drawCurvedText:item.title inContext:ctx atAngle:0 radius:midRadius font:item.font];
+        CGContextRestoreGState(ctx);
     }
 }
 
