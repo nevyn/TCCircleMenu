@@ -5,13 +5,16 @@
 #import "SPDepends.h"
 #import <QuartzCore/QuartzCore.h>
 
-@interface TCCircleMenu ()
+@interface TCCircleMenu () <UIGestureRecognizerDelegate>
 @property(nonatomic,assign) TCCircleMenu *parent; // root menu if nil
 @property(nonatomic,retain) UIView *touchInterceptorView;
+@property(nonatomic,retain,readwrite) TCCircleMenu *subMenu;
+@property(nonatomic,retain) TCCircleMenuItem *submenuItem;
 @property(nonatomic,retain) UITapGestureRecognizer *touchInterceptorGrec;
 -(CGFloat)innerCircumference;
 -(CGFloat)innerRadius;
 -(CGFloat)outerRadius;
+-(void)updateAngles;
 
 @property(nonatomic,retain) SPKVObservation *itemsObs;
 @end
@@ -27,6 +30,7 @@
     NSMutableArray *_menuItems;
 }
 @synthesize subMenu = _subMenu;
+@synthesize submenuItem = _submenuItem;
 @synthesize parent = _parent;
 @synthesize itemsObs = _itemsObs;
 @synthesize touchInterceptorView = _touchInterceptorView;
@@ -51,26 +55,11 @@
 		for(TCCircleMenuItem *added in [how objectForKey:NSKeyValueChangeNewKey])
 			[selff addSubview:added]; 
 		
-        CGPoint p = selff.layer.position;
-        //CGFloat ri = [selff innerRadius];
-        CGFloat ro = [selff outerRadius];
-        CGFloat ic = [self innerCircumference];
-        selff.frame = CGRectMake(0, 0, ro*2 + 2, ro*2 + 2);
-        selff.layer.position = p;
-
-        #define angleWidthForSegment(x) (([x bodySize].width/ic)*M_PI*2)
-        CGFloat anglePen = -M_PI/2 - angleWidthForSegment([selff->_menuItems objectAtIndex:0])/2;        
-
-        for(TCCircleMenuItem *item in selff->_menuItems) {
-            item.frame = selff.bounds;
-            
-            item.startAngle = anglePen;
-            anglePen += angleWidthForSegment(item);
-            item.endAngle = anglePen;
-        }
-        
-        [selff setNeedsDisplay];
+        [selff updateAngles];
     }];
+    $depends(@"parent", self, @"parent", (id)^{
+        [selff updateAngles];
+    });
     
     return self;
 }
@@ -79,6 +68,8 @@
     [_menuItems release]; _menuItems = nil;
     [_itemsObs invalidate]; self.itemsObs = nil;
 	[_touchInterceptorView removeFromSuperview]; self.touchInterceptorView = nil;
+    [self dismissSubmenu];
+    self.subMenu = nil;
 	self.touchInterceptorGrec = nil;
     [super dealloc];
 }
@@ -90,14 +81,31 @@
     UIRectFill(rect);
     
     for(TCCircleMenuItem *item in _menuItems) {
-		[[UIColor colorWithHue:[_menuItems indexOfObject:item]/(float)_menuItems.count saturation:1 brightness:1 alpha:.5] set];
+		[[UIColor colorWithHue:[_menuItems indexOfObject:item]/(float)_menuItems.count saturation:.6 brightness:1 alpha:.8] set];
         [item.pathBounds fill];
         
     }
 }
 
 #pragma mark Touch
-
+-(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event;
+{
+    // Touched inside the circle
+    TCCircleMenu *menu = self.subMenu;
+    do {} while(menu.subMenu && (menu = menu.subMenu));
+    if(menu)
+        [menu.parent dismissSubmenu];
+    else
+        [self dismiss];
+}
+- (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event;
+{
+    if(!_parent)
+        return [super pointInside:point withEvent:event];
+    else return [[_menuItems sp_collect:$num(0) with:^id(id sum, id obj) {
+        return $num([sum boolValue] || [obj pointInside:point withEvent:event]);
+    }] boolValue];
+}
 
 #pragma mark Circle math
 -(CGFloat)innerCircumference;
@@ -114,12 +122,37 @@
     CGFloat innerRadius = innerCircumference/(2*M_PI);
     
     return innerRadius;
-    
 }
 -(CGFloat)outerRadius;
 {
     return [self innerRadius] + [[_menuItems lastObject] bodySize].height;
 }
+
+-(void)updateAngles;
+{
+    if(_menuItems.count == 0) return;
+    
+    CGPoint p = self.layer.position;
+    //CGFloat ri = [self innerRadius];
+    CGFloat ro = [self outerRadius];
+    CGFloat ic = [self innerCircumference];
+    self.frame = CGRectMake(0, 0, ro*2 + 2, ro*2 + 2);
+    self.layer.position = p;
+
+    #define angleWidthForSegment(x) (([x bodySize].width/ic)*M_PI*2)
+    CGFloat anglePen = -M_PI/2 - angleWidthForSegment([_menuItems objectAtIndex:0])/2;        
+
+    for(TCCircleMenuItem *item in _menuItems) {
+        item.frame = self.bounds;
+        
+        item.startAngle = anglePen;
+        anglePen += angleWidthForSegment(item);
+        item.endAngle = anglePen;
+    }
+    
+    [self setNeedsDisplay];
+}
+
 
 
 #pragma mark Presentation
@@ -128,30 +161,42 @@
     self.layer.position = p;
     self.alpha = 0;
     self.transform = CGAffineTransformScale(CGAffineTransformMakeRotation(-M_PI/4), .6, .6);
-    [view addSubview:self];
+    
+    if(_parent)
+        [view insertSubview:self belowSubview:_parent];
+    else
+        [view addSubview:self];
     [UIView animateWithDuration:.3 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
         self.alpha = 1;
         self.transform = CGAffineTransformIdentity;
     } completion:nil];
-	
+    
 	if(!_parent) {
-		UIWindow *window = view.window;
-		self.touchInterceptorView = [[[UIView alloc] initWithFrame:window.bounds] autorelease];
-		[window insertSubview:_touchInterceptorView belowSubview:self];
+		self.touchInterceptorView = [[[UIView alloc] initWithFrame:view.bounds] autorelease];
+		[view insertSubview:_touchInterceptorView belowSubview:self];
 		self.touchInterceptorGrec = [[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(backgroundTap:)] autorelease];
+        _touchInterceptorGrec.delegate = self;
 		[_touchInterceptorView addGestureRecognizer:_touchInterceptorGrec];
 	}
+	
 }
 -(void)backgroundTap:(UITapGestureRecognizer*)grec;
 {
 	if(grec.state == UIGestureRecognizerStateRecognized)
 		[self dismiss];
 }
+-(BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch;
+{
+    if([touch.view isDescendantOfView:self])
+        return NO;
+    return YES;
+}
 -(void)dismiss;
 {
+    [self dismissSubmenu];
 	[UIView animateWithDuration:.3 delay:0 options:UIViewAnimationCurveEaseIn animations:^{
 		self.alpha = 0;
-		self.transform = CGAffineTransformScale(CGAffineTransformMakeRotation(M_PI/4), 1.4, 1.4);
+        self.transform = CGAffineTransformScale(CGAffineTransformMakeRotation(M_PI/4), .6, .6);
 	} completion:^(BOOL finished) {
 		[self removeFromSuperview];
 	}];
@@ -164,13 +209,19 @@
 #pragma mark Submenus
 -(void)presentSubmenu:(TCCircleMenu*)menu fromItem:(TCCircleMenuItem*)item;
 {
-    if(_parent)
-        return [_parent presentSubmenu:menu fromItem:item];
+    menu.parent = self;
+    self.subMenu = menu;
+    [menu presentAt:self.layer.position inView:self.superview];
     
+    item.selected = YES;
+    self.submenuItem = item;
 }
 -(void)dismissSubmenu;
 {
-
+    self.submenuItem.selected = NO;
+    self.submenuItem = nil;
+    [self.subMenu dismiss];
+    self.subMenu = nil;
 }
 
 
@@ -224,7 +275,9 @@
 	
 	$depends(@"angles", self, @"startAngle", @"endAngle", (id)^{
 		[selff->_pathBounds release]; selff->_pathBounds = nil;
-	}, nil);
+	});
+    
+    [self addTarget:self action:@selector(touched) forControlEvents:UIControlEventTouchUpInside];
 	
     return self;
 }
@@ -235,6 +288,12 @@
     self.font = nil;
 	[_pathBounds release];
     [super dealloc];
+}
+
+-(void)touched;
+{
+    if(self.action)
+        self.action(self);
 }
 
 -(UIBezierPath*)pathBounds;

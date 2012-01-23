@@ -65,7 +65,7 @@
 			children = (
 				05C41F1814CC623A0072C1E8 /* TCCircleMenu.h */,
 				05C41F1914CC623A0072C1E8 /* TCCircleMenu.m */,
-				05C41F0714CC621D0072C1E8 /* TCCircleMenu */,
+				05C41F0714CC621D0072C1E8 /* Demo App */,
 				05C41F0014CC621D0072C1E8 /* Frameworks */,
 				05C41EFE14CC621D0072C1E8 /* Products */,
 			);
@@ -91,13 +91,14 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		05C41F0714CC621D0072C1E8 /* TCCircleMenu */ = {
+		05C41F0714CC621D0072C1E8 /* Demo App */ = {
 			isa = PBXGroup;
 			children = (
 				05C41F1014CC621D0072C1E8 /* TCAppDelegate.h */,
 				05C41F1114CC621D0072C1E8 /* TCAppDelegate.m */,
 				05C41F0814CC621D0072C1E8 /* Supporting Files */,
 			);
+			name = "Demo App";
 			path = TCCircleMenu;
 			sourceTree = "<group>";
 		};
