@@ -3,7 +3,8 @@
 
 @interface TCCircleMenu : UIView
 @property(nonatomic,readonly) NSMutableArray *menuItems;
--init;
++(id)menuWithItems:(NSArray*)items;
+-(id)init;
 
 -(void)presentAt:(CGPoint)p inView:(UIView*)view;
 -(void)dismiss;

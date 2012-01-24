@@ -37,6 +37,12 @@
 @synthesize touchInterceptorView = _touchInterceptorView;
 @synthesize touchInterceptorGrec = _touchInterceptorGrec;
 @dynamic menuItems;
++(id)menuWithItems:(NSArray*)items;
+{
+	TCCircleMenu *menu = [[TCCircleMenu new] autorelease];
+	[menu.menuItems setArray:items];
+	return menu;
+}
 - (id)init; { return [self initWithFrame:CGRectZero]; }
 - (id)initWithFrame:(CGRect)frame;
 {
